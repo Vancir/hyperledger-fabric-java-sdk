@@ -1,4 +1,4 @@
-# Fagitive Consortium
+# Fugitive Consortium
 
 ## Introduction
 
@@ -90,7 +90,7 @@
 $ cd build-network
 $ chmod +x *.sh
 $ ./init.sh
-$ ./generate
+$ ./generate.sh
 $ ./start.sh
 ```
 
