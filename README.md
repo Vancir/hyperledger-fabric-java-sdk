@@ -90,7 +90,7 @@
 $ cd build-network
 $ chmod +x *.sh
 $ ./init.sh
-$ ./generate.sh
+$ (./generate.sh)
 $ ./start.sh
 ```
 
