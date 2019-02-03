@@ -126,7 +126,7 @@ $ mvn install
 
 同上生成应用步骤, 该步骤将会生成链码对应的jar包, 放置于`target`文件夹内.
 
-5. 运行应用
+4. 运行应用
 
 * 将应用对应的jar包放置在`network-resources`目录下. 
 
