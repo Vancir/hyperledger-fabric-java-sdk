@@ -84,12 +84,12 @@
 
 1. 生成容器网络运行所需的文件并启动网络
 
-> 注意: 运行`generate.sh`重新生成证书等信息后, 需要重新修改`docker-compose.yml`中`ca.org1.vancir.com`和`ca.org2.vancir.com`的环境变量`FABRIC_CA_SERVER_CA_KEYFILE`及`FABRIC_CA_SERVER_CA_CERTFILE`为相应的证书及密钥路径. 对应的路径在`network-resources/crypto-config/peerOrganizations/org1(2).vancir.com/ca`. 当然默认我已经预生成好的证书等信息并配置好, 无需再次运行`generate.sh`
+> 注意: 运行`generate.sh`重新生成证书等信息后, 需要重新修改`docker-compose.yml`中`ca.org1.vancir.com`和`ca.org2.vancir.com`的环境变量`FABRIC_CA_SERVER_CA_KEYFILE`及`FABRIC_CA_SERVER_CA_CERTFILE`为相应的证书及密钥路径. 对应的路径在`network-resources/crypto-config/peerOrganizations/org1(2).vancir.com/ca`. 当然默认我已经预生成好的证书等信息并配置好, 无需再次运行`init.sh`和`generate.sh`
 
 ``` bash
 $ cd build-network
 $ chmod +x *.sh
-$ ./init.sh
+$ (./init.sh)
 $ (./generate.sh)
 $ ./start.sh
 ```
