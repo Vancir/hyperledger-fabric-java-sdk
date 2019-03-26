@@ -33,7 +33,6 @@ public class Chaincode extends ChaincodeBase {
         return CHAINCODE_ID;
     }
 
-    // FIXME: Unless transaction is committed, update is not available for GetState.
     @Override
     public Response init(ChaincodeStub stub) {
         try {
@@ -56,7 +55,7 @@ public class Chaincode extends ChaincodeBase {
             Boolean personIsFleeing = Boolean.parseBoolean(args.get(4));
             String personDesc = args.get(5);
 
-            Person person = new Person(personID, personName, personSex, personAge, personIsFleeing, personDesc);
+            Person person = new Person(personName, personSex, personAge, personIsFleeing, personDesc);
             try {
                 // convert object to json 
                 String personString = mapper.writeValueAsString(person);
@@ -111,12 +110,12 @@ public class Chaincode extends ChaincodeBase {
         Boolean personIsFleeing = Boolean.parseBoolean(args.get(4));
         String personDesc = args.get(5);
 
-        Person person = new Person(personID, personName, personSex, personAge, personIsFleeing, personDesc);
+        Person person = new Person( personName, personSex, personAge, personIsFleeing, personDesc);
         try {
             // convert object to json 
             String personString = mapper.writeValueAsString(person);
             stub.putStringState(personLogID, personString);
-            return newSuccessResponse("added with " + personLogID + personString);
+            return newSuccessResponse("added with " + personLogID + " " + personString);
         
         } catch (JsonGenerationException e) {
             return newErrorResponse("Json generation failed");
@@ -199,21 +198,25 @@ public class Chaincode extends ChaincodeBase {
  * @param desc          person description
  */ 
 class Person {
-    String ID;
     String Name;
     String Sex;
     int Age;
     Boolean IsFleeing; 
     String Desc;
 
-    public Person(String id, String name, String sex, int age, Boolean isFlee, String desc) {
-        this.ID = id;
+    public Person(String name, String sex, int age, Boolean isFlee, String desc) {
         this.Name = name;
         this.Sex = sex;
         this.Age = age;
         this.IsFleeing = isFlee;
         this.Desc = desc;
     }
+    // public void setID(String id) {
+    //     this.ID = id;
+    // }
+    // public String getID() {
+    //     return this.ID;
+    // }
 
     public void setName(String name) {
         this.Name = name;

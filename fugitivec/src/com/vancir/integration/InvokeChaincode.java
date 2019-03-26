@@ -70,8 +70,8 @@ public class InvokeChaincode {
             // String[] testUpdateArgs = { "ID001", "Alice is fugitive" };
             // channelManager.invokeChaincode(Config.CHAINCODE_NAME, "update", testUpdateArgs);
 
-            String[] testDeleteArgs = { "ID001" };
-            channelManager.invokeChaincode(Config.CHAINCODE_NAME, "delete", testDeleteArgs);
+            // String[] testDeleteArgs = { "ID001" };
+            // channelManager.invokeChaincode(Config.CHAINCODE_NAME, "delete", testDeleteArgs);
 
 
         } catch (Exception e) {

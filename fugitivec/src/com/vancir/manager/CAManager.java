@@ -71,11 +71,11 @@ public class CAManager {
      */
     public String registerUser(AppUser registrar) throws Exception, RegistrationException, InvalidArgumentException {
         RegistrationRequest rr = new RegistrationRequest(registrar.getName(), registrar.getAffiliation());
-        String enrollmentSecret = caClient.register(rr, registrar);
+        String enrollmentSecret = caClient.register(rr, adminUser);
 
         logger.info("CA -" + caUrl + " Registered User - " + registrar.getName());
         return enrollmentSecret;
-    }    
+    }  
     /**
      * Enroll user
      * 

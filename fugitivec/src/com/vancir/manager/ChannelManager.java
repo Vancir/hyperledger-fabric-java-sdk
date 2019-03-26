@@ -95,7 +95,7 @@ public class ChannelManager {
             }
 
             Collection<ProposalResponse> responses = channel.sendTransactionProposal(request);
-
+            channel.sendTransaction(responses);
             for (ProposalResponse res : responses) {
                 // String stringResponse = new String(res.getChaincodeActionResponsePayload());
                 logger.info(res.getMessage());
