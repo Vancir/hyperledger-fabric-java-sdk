@@ -1,4 +1,4 @@
-# Fagitive Consortium
+# Fugitive Consortium
 
 ## Introduction
 
@@ -72,7 +72,7 @@
 
 ## Prerequisites
 
-1. [Java 8u181](): 建议使用这个版本的JDK用作开发. 
+1. [Java 8u181](https://www.oracle.com/technetwork/java/javase/downloads/java-archive-javase8-2177648.html): 建议使用这个版本的JDK用作开发. 
 2. [Hyperledger Fabric Java SDK 1.3.0](https://github.com/hyperledger/fabric-sdk-java): 使用Fabric给出的java sdk编写链码以及应用. 
 3. [Apache Maven](https://maven.apache.org): 使用Maven管理Java工程项目, 生成应用.
 4. [Docker 18.09.0](https://www.docker.com/): 使用Docker部署容器, 用于构建网络拓扑结构.
@@ -84,13 +84,13 @@
 
 1. 生成容器网络运行所需的文件并启动网络
 
-> 注意: 运行`generate.sh`重新生成证书等信息后, 需要重新修改`docker-compose.yml`中`ca.org1.vancir.com`和`ca.org2.vancir.com`的环境变量`FABRIC_CA_SERVER_CA_KEYFILE`及`FABRIC_CA_SERVER_CA_CERTFILE`为相应的证书及密钥路径. 对应的路径在`network-resources/crypto-config/peerOrganizations/org1(2).vancir.com/ca`. 当然默认我已经预生成好的证书等信息并配置好, 无需再次运行`generate.sh`
+> 注意: 运行`generate.sh`重新生成证书等信息后, 需要重新修改`docker-compose.yml`中`ca.org1.vancir.com`和`ca.org2.vancir.com`的环境变量`FABRIC_CA_SERVER_CA_KEYFILE`及`FABRIC_CA_SERVER_CA_CERTFILE`为相应的证书及密钥路径. 对应的路径在`network-resources/crypto-config/peerOrganizations/org1(2).vancir.com/ca`. 当然默认我已经预生成好的证书等信息并配置好, 无需再次运行`init.sh`和`generate.sh`
 
 ``` bash
 $ cd build-network
 $ chmod +x *.sh
-$ ./init.sh
-$ ./generate
+$ (./init.sh)
+$ (./generate.sh)
 $ ./start.sh
 ```
 
@@ -126,7 +126,7 @@ $ mvn install
 
 同上生成应用步骤, 该步骤将会生成链码对应的jar包, 放置于`target`文件夹内.
 
-5. 运行应用
+4. 运行应用
 
 * 将应用对应的jar包放置在`network-resources`目录下. 
 
@@ -170,7 +170,7 @@ $ java -cp fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar com.vancir.integrati
 $ cd ../build-network
 $ ./restart.sh
 $ cd ../network-resources
-$ java -cp fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar com.vancir.network.DeployChaincode
+$ java -cp fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar com.vancir.integration.DeployChaincode
 2018-12-20 14:21:04 WARN  Config:127 - Failed to load any configuration from: config.properties. Using toolkit defaults
 2018-12-20 14:21:05 INFO  Channel:770 - Channel{id: 3, name: mychannel} joining Peer{ id: 5, name: peer0.org1.vancir.com, channelName: null, url: grpc://localhost:7051}.
 2018-12-20 14:21:06 INFO  Channel:802 - Peer Peer{ id: 5, name: peer0.org1.vancir.com, channelName: mychannel, url: grpc://localhost:7051} joined into channel Channel{id: 3, name: mychannel}
@@ -201,7 +201,7 @@ $ java -cp fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar com.vancir.network.D
 部署并实例化链码后, 可以使用`InvokeChaincode`来调用链码
 
 ``` bash
-$ java -cp fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar com.vancir.network.InvokeChaincode
+$ java -cp fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar com.vancir.integration.InvokeChaincode
 
 ```
 
