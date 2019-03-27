@@ -1,7 +1,9 @@
 package com.vancir.integration;
 
 import java.util.Map;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Scanner;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.vancir.manager.CAManager;
@@ -61,18 +63,33 @@ public class InvokeChaincode {
             // transMap.put(EXPECTED_EVENT_NAME, EXPECTED_EVENT_DATA);
             request.setTransientMap(transMap);
 
+            // String[] testInitArgs = { "ID001", "Alice", "Female", "20", "true", "Alice is not fugitive" };
+            // channelManager.invokeChaincode(Config.CHAINCODE_NAME, "init", testInitArgs);
+            
             String[] testAddArgs = { "ID002", "Peter", "Male", "19", "false", "Perter is a good boy" };
             channelManager.invokeChaincode(Config.CHAINCODE_NAME, "add", testAddArgs);
+            
+            logger.info("Please input your command.");
+            // add ID003 Sam Female 22 true Sam_is_not_good
+            // delete ID003
+            // query ID002
+            // update ID002 Alice_is_fugitive
+            Scanner sc = new Scanner(System.in);
+            while(sc.hasNextLine()) {
+                String inputLine = sc.nextLine();
+                // logger.info(inputLine);
 
-            // String[] testQueryArgs = { "ID001" };
-            // channelManager.invokeChaincode(Config.CHAINCODE_NAME, "query", testQueryArgs);
+                String[] inputArray = inputLine.split(" ");
+                String opt = inputArray[0];
+                String[] inputArgs = new String[inputArray.length-1];
+                for (int i=1; i<inputArray.length; i++) {
+                    inputArgs[i-1] = inputArray[i];
+                }
 
-            // String[] testUpdateArgs = { "ID001", "Alice is fugitive" };
-            // channelManager.invokeChaincode(Config.CHAINCODE_NAME, "update", testUpdateArgs);
 
-            // String[] testDeleteArgs = { "ID001" };
-            // channelManager.invokeChaincode(Config.CHAINCODE_NAME, "delete", testDeleteArgs);
-
+                logger.info("Your opt is: " + opt + " and your args is: " + Arrays.toString(inputArgs));
+                channelManager.invokeChaincode(Config.CHAINCODE_NAME, inputArray[0], inputArgs);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

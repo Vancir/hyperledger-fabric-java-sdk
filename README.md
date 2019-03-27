@@ -202,6 +202,14 @@ $ java -cp fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar com.vancir.integrati
 
 ``` bash
 $ java -cp fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar com.vancir.integration.InvokeChaincode
+2019-03-27 13:50:14 WARN  Config:127 - Failed to load any configuration from: config.properties. Using toolkit defaults
+2019-03-27 13:50:15 WARN  Config:78 - Failed to load any configuration from: config.properties. Using toolkit defaults
+2019-03-27 13:50:18 INFO  CAManager:91 - CA -http://localhost:7054 Enrolled User - admin
+2019-03-27 13:50:20 INFO  Channel:1147 - Channel Channel{id: 1, name: mychannel} eventThread started shutdown: false  thread: null 
+2019-03-27 13:50:21 INFO  ChannelManager:101 - added with Fujian-CFL-ID002 {"id":"ID002","name":"Peter","sex":"Male","age":19,"isFleeing":false,"desc":"Perter is a good boy"}
+2019-03-27 13:50:21 INFO  ChannelManager:101 - transaction returned with failure: Query for Fujian-CFL-ID002 is null 
+2019-03-27 13:50:21 INFO  ChannelManager:101 - transaction returned with failure: Error: query for Fujian-CFL-ID002 is null 
+2019-03-27 13:50:21 INFO  ChannelManager:101 - Deleted Fujian-CFL-ID002
 
 ```
 

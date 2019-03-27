@@ -22,8 +22,6 @@ public class RegisterAndEnrollUser {
             org1Admin = caManager.enrollAdminUser(Config.ADMIN, Config.ADMINPW);
 
             // enroll user to Org1MSP
-            // FIXME: when register a new user, chaincode will throw a authentication failure error. 
-            // fabric-ca-client register -d --id.name user123 --id.affiliation org1
             String userName = "user"+System.currentTimeMillis();
             AppUser org1User = Util.getOrgAdmin(userName, Config.ORG1_MSP, PROJ_ROOT + Config.ORG1_ADMIN_PK, PROJ_ROOT + Config.ORG1_ADMIN_CERT);
             String org1UserSecret = caManager.registerAndEnrollUser(org1User);

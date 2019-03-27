@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hyperledger.fabric.shim.ChaincodeBase;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
+import fugitivec.Person;
+
 public class Chaincode extends ChaincodeBase {
     // private static Logger logger = Logger.getLogger(Chaincode.class); 
 
@@ -48,19 +50,17 @@ public class Chaincode extends ChaincodeBase {
             }
 
             String personID = args.get(0);
-            String personLogID = KEY_PREFIX + args.get(0);
             String personName = args.get(1);
             String personSex = args.get(2);
             int personAge = Integer.parseInt(args.get(3));
             Boolean personIsFleeing = Boolean.parseBoolean(args.get(4));
             String personDesc = args.get(5);
 
-            Person person = new Person(personName, personSex, personAge, personIsFleeing, personDesc);
+            Person person = new Person(personID, personName, personSex, personAge, personIsFleeing, personDesc);
             try {
                 // convert object to json 
-                String personString = mapper.writeValueAsString(person);
-                stub.putStringState(personLogID, personString);
-                return newSuccessResponse("inited with " + personString);
+                stub.putState(personID, mapper.writeValueAsBytes(person));
+                return newSuccessResponse("inited with ");
 
             } catch (JsonGenerationException e) {
                 return newErrorResponse("Json generation failed");
@@ -103,19 +103,30 @@ public class Chaincode extends ChaincodeBase {
         } 
         
         String personID = args.get(0);
-        String personLogID = KEY_PREFIX + args.get(0);
+
         String personName = args.get(1);
         String personSex = args.get(2);
         int personAge = Integer.parseInt(args.get(3));
         Boolean personIsFleeing = Boolean.parseBoolean(args.get(4));
         String personDesc = args.get(5);
 
-        Person person = new Person( personName, personSex, personAge, personIsFleeing, personDesc);
+        Person person = new Person(personID, personName, personSex, personAge, personIsFleeing, personDesc);
         try {
-            // convert object to json 
-            String personString = mapper.writeValueAsString(person);
-            stub.putStringState(personLogID, personString);
-            return newSuccessResponse("added with " + personLogID + " " + personString);
+
+            stub.putState(personID, mapper.writeValueAsBytes(person));
+
+            // String personString = stub.getStringState(personID);
+            // if (personString == null|| personString.isEmpty()) {
+            //     return newErrorResponse(String.format("getState for %s is null %s", personID, personString));
+            // }
+            // try {
+            //     Person getPerson = mapper.readValue(personString, Person.class);
+            //     return newSuccessResponse(String.format("Query Response: ID: %s, Name: %s, Sex: %s, Age: %d, isFleeing: %b, Description: %s", 
+            //             getPerson.id, getPerson.getName(), getPerson.getSex(), getPerson.getAge(), getPerson.getIsFleeing(), getPerson.getDesc()));
+            // } catch (Exception e) {
+            //     return newErrorResponse("failed to convert person from string into object: " + personString);
+            // }
+            return newSuccessResponse("added with " + personID);
         
         } catch (JsonGenerationException e) {
             return newErrorResponse("Json generation failed");
@@ -130,9 +141,9 @@ public class Chaincode extends ChaincodeBase {
         if (args.size() != 1) {
             return newErrorResponse("Incorrect number of arguments. Expecting 1. Syntax: delete <string ID>");
         }
-        String personLogID = KEY_PREFIX + args.get(0);
-        stub.delState(personLogID);
-        return newSuccessResponse("Deleted " + personLogID);
+        String personID = args.get(0);
+        stub.delState(personID);
+        return newSuccessResponse("Deleted " + personID);
     }
     
     private Response query(ChaincodeStub stub, List<String> args) {
@@ -140,10 +151,10 @@ public class Chaincode extends ChaincodeBase {
             return newErrorResponse("Incorrect number of arguments. Expecting ID of the person to query. Syntax: query <string ID>");
         }
 
-        String personLogID = KEY_PREFIX + args.get(0);
-        String personString = stub.getStringState(personLogID);
-        if (personString == null|| "".equals(personString)) {
-            return newErrorResponse(String.format("Query for %s is null", personLogID));
+        String personID = args.get(0);
+        String personString = stub.getStringState(personID);
+        if (personString == null|| personString.isEmpty()) {
+            return newErrorResponse(String.format("getState for %s is null %s", personID, personString));
         }
         try {
             Person person = mapper.readValue(personString, Person.class);
@@ -163,11 +174,11 @@ public class Chaincode extends ChaincodeBase {
         if (args.size() != 2) {
             return newErrorResponse("Incorrect number of arguments. Expecting 2 Syntax: update <string ID> <string description>");
         }
-        String personLogID = KEY_PREFIX + args.get(0);
+        String personID = args.get(0);
         String personAfterDesc = args.get(1);
-        String personString = stub.getStringState(personLogID);
-        if (personString == null || "".equals(personString)) {
-            return newErrorResponse(String.format("Error: query for %s is null", personLogID));
+        String personString = stub.getStringState(personID);
+        if (personString == null || personString.isEmpty()) {
+            return newErrorResponse(String.format("getState for %s is null %s", personID, personString));
         }
         try {
             Person person = mapper.readValue(personString, Person.class);
@@ -175,11 +186,21 @@ public class Chaincode extends ChaincodeBase {
             String personBeforeDesc = person.getDesc();
             person.setDesc(personAfterDesc);
 
-            String personUpdatedString = mapper.writeValueAsString(person);
-            stub.putStringState(personLogID, personUpdatedString);
-
-            return newSuccessResponse(String.format("Key: %s. Before updated, the message is %s After updated, the message is %s.", 
-                                                        personLogID, personBeforeDesc, stub.getStringState(personLogID)));
+            stub.putState(personID, mapper.writeValueAsBytes(person));
+        
+            // String personAfterString = stub.getStringState(personID);
+            // if (personAfterString == null|| personAfterString.isEmpty()) {
+            //     return newErrorResponse(String.format("getState for %s is null %s", personID, personAfterString));
+            // }
+            // try {
+            //     Person getPerson = mapper.readValue(personAfterString, Person.class);
+                // return newSuccessResponse(String.format("Key: %s. Before updated, the message is %s After updated, the message now is %s.", 
+                //             getPerson.id, personBeforeDesc, getPerson.desc));
+            // } catch (Exception e) {
+            //     return newErrorResponse("Mapper failed");
+            // }
+            return newSuccessResponse(String.format("Key: %s. Before updated, the message is %s After updated, the message now is %s.", 
+                        personID, personBeforeDesc, personAfterDesc));
 
         } catch (Exception e) {
             return newErrorResponse("failed to convert person from string into object: " + personString);
@@ -187,58 +208,3 @@ public class Chaincode extends ChaincodeBase {
     }
 }
 
-
-/**
- * Person 
- * @param id
- * @param name          
- * @param sex
- * @param age
- * @param isFleeing     is still in fleeing
- * @param desc          person description
- */ 
-class Person {
-    String Name;
-    String Sex;
-    int Age;
-    Boolean IsFleeing; 
-    String Desc;
-
-    public Person(String name, String sex, int age, Boolean isFlee, String desc) {
-        this.Name = name;
-        this.Sex = sex;
-        this.Age = age;
-        this.IsFleeing = isFlee;
-        this.Desc = desc;
-    }
-    // public void setID(String id) {
-    //     this.ID = id;
-    // }
-    // public String getID() {
-    //     return this.ID;
-    // }
-
-    public void setName(String name) {
-        this.Name = name;
-    }
-    public String getName() {
-        return this.Name;
-    } 
-    public String getSex() {
-        return this.Sex;
-    }
-    public int getAge() {
-        return this.Age;
-    }
-    public Boolean getIsFleeing() {
-        return this.IsFleeing;
-    }
-    public String getDesc() {
-        return this.Desc;
-    }
-    public void setDesc(String desc) {
-        this.Desc = desc;
-    }
-
-
-}

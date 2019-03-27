@@ -7,4 +7,5 @@ logging.log
 .factorypath
 .settings
 apache-maven-3.6.0*
-.jar
+*.jar*
+.vscode/
