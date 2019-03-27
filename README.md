@@ -111,8 +111,8 @@ $ mvn install
 
 ``` bash
 $ ls
-archive-tmp  fugitivec-1.0-SNAPSHOT.jar                        generated-sources  maven-status
-classes      fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar  maven-archiver
+archive-tmp  fugitivec-1.0-SNAPSHOT.jar                        generated-sources  maven-status  generated-test-sources       
+classes      fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar  maven-archiver     test-classes  surefire-reports
 ```
 
 3. 生成链码
