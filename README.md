@@ -62,6 +62,7 @@
 │   │   ├── src                         # 链码源代码所在目录
 │   │   │   ├── fugitivec
 │   │   │   │   └── Chaincode.java      # 链码源代码
+│   │   │   │   └── Person.java         # 逃犯类, 用于描述逃犯档案信息
 │   │   │   └── resources               # 资源文件目录
 │   │   │       └── log4j.properties    # 日志工具log4j的配置文件
 │   ├── channel-artifacts               # 包含运行generate.sh后生成的创世区块, 通道配置, 背书节点配置.
@@ -97,8 +98,6 @@ $ ./start.sh
 你也可用使用`stop.sh`停止网络, `teardown.sh`停止并清除网络. 
 
 
-
-
 2. 生成应用
 
 ``` bash
@@ -107,6 +106,7 @@ $ ls
 pom.xml  src
 $ mvn install
 ```
+
 确保你安装好了maven并将其添加到了你的环境变量中去. `mvn install`将会下载项目的依赖包并进行测试构建并生成应用, 输出到`target`文件夹内. 
 
 ``` bash
@@ -137,39 +137,12 @@ $ cp ../fugitivec/target/fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar .
 
 因为运行时的一些路径原因, 需要将生成的`fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar`放置在`network-resources`文件夹下.
 
-* 创建通道
-
-将jar包放置于`network-resources`文件夹下后, 可以使用`java -cp`命令指定jar后运行`CreateChannel`类. 
-
-``` bash
-$ java -cp fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar com.vancir.integration.CreateChannel
-2018-12-20 13:58:00 WARN  Config:127 - Failed to load any configuration from: config.properties. Using toolkit defaults
-2018-12-20 13:58:01 INFO  Channel:770 - Channel{id: 3, name: mychannel} joining Peer{ id: 5, name: peer0.org1.vancir.com, channelName: null, url: grpc://localhost:7051}.
-2018-12-20 13:58:02 INFO  Channel:802 - Peer Peer{ id: 5, name: peer0.org1.vancir.com, channelName: mychannel, url: grpc://localhost:7051} joined into channel Channel{id: 3, name: mychannel}
-2018-12-20 13:58:02 INFO  Channel:770 - Channel{id: 3, name: mychannel} joining Peer{ id: 6, name: peer1.org1.vancir.com, channelName: null, url: grpc://localhost:7056}.
-2018-12-20 13:58:02 INFO  Channel:802 - Peer Peer{ id: 6, name: peer1.org1.vancir.com, channelName: mychannel, url: grpc://localhost:7056} joined into channel Channel{id: 3, name: mychannel}
-2018-12-20 13:58:02 INFO  Channel:1147 - Channel Channel{id: 3, name: mychannel} eventThread started shutdown: false  thread: null 
-2018-12-20 13:58:02 INFO  Channel:770 - Channel{id: 3, name: mychannel} joining Peer{ id: 7, name: peer0.org2.vancir.com, channelName: null, url: grpc://localhost:8051}.
-2018-12-20 13:58:02 WARN  PeerEventServiceClient:230 - PeerEventServiceClient{id: 16, channel: mychannel, peerName: peer0.org2.vancir.com, url: grpc://localhost:8051} PeerEventServiceClient{id: 16, channel: mychannel, peerName: peer0.org2.vancir.com, url: grpc://localhost:8051} attempts 0 Status returned failure code 404 (NOT_FOUND) during peer service event registration
-2018-12-20 13:58:03 INFO  Channel:802 - Peer Peer{ id: 7, name: peer0.org2.vancir.com, channelName: mychannel, url: grpc://localhost:8051} joined into channel Channel{id: 3, name: mychannel}
-2018-12-20 13:58:03 INFO  Channel:770 - Channel{id: 3, name: mychannel} joining Peer{ id: 8, name: peer1.org2.vancir.com, channelName: null, url: grpc://localhost:8056}.
-2018-12-20 13:58:03 WARN  PeerEventServiceClient:230 - PeerEventServiceClient{id: 19, channel: mychannel, peerName: peer1.org2.vancir.com, url: grpc://localhost:8056} PeerEventServiceClient{id: 19, channel: mychannel, peerName: peer1.org2.vancir.com, url: grpc://localhost:8056} attempts 0 Status returned failure code 404 (NOT_FOUND) during peer service event registration
-2018-12-20 13:58:03 INFO  Channel:802 - Peer Peer{ id: 8, name: peer1.org2.vancir.com, channelName: mychannel, url: grpc://localhost:8056} joined into channel Channel{id: 3, name: mychannel}
-2018-12-20 13:58:03 INFO  CreateChannel:65 - peer1.org2.vancir.com at grpc://localhost:8056
-2018-12-20 13:58:03 INFO  CreateChannel:65 - peer0.org2.vancir.com at grpc://localhost:8051
-2018-12-20 13:58:03 INFO  CreateChannel:65 - peer0.org1.vancir.com at grpc://localhost:7051
-2018-12-20 13:58:03 INFO  CreateChannel:65 - peer1.org1.vancir.com at grpc://localhost:7056
-
-```
-
 * 部署链码
 
-使用`DeployChaincode`来部署并实例化链码. 因为在`DeployChaincode`内有做创建通道的操作, 因此在运行`DeployChaincode`之前, 你应当运行`build-network/restart.sh`重置容器网络. 
+使用`DeployChaincode`来部署并实例化链码. 
 
 ``` bash
-$ cd ../build-network
-$ ./restart.sh
-$ cd ../network-resources
+$ cd network-resources
 $ java -cp fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar com.vancir.integration.DeployChaincode
 2018-12-20 14:21:04 WARN  Config:127 - Failed to load any configuration from: config.properties. Using toolkit defaults
 2018-12-20 14:21:05 INFO  Channel:770 - Channel{id: 3, name: mychannel} joining Peer{ id: 5, name: peer0.org1.vancir.com, channelName: null, url: grpc://localhost:7051}.
@@ -201,15 +174,30 @@ $ java -cp fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar com.vancir.integrati
 部署并实例化链码后, 可以使用`InvokeChaincode`来调用链码
 
 ``` bash
-$ java -cp fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar com.vancir.integration.InvokeChaincode
-2019-03-27 13:50:14 WARN  Config:127 - Failed to load any configuration from: config.properties. Using toolkit defaults
-2019-03-27 13:50:15 WARN  Config:78 - Failed to load any configuration from: config.properties. Using toolkit defaults
-2019-03-27 13:50:18 INFO  CAManager:91 - CA -http://localhost:7054 Enrolled User - admin
-2019-03-27 13:50:20 INFO  Channel:1147 - Channel Channel{id: 1, name: mychannel} eventThread started shutdown: false  thread: null 
-2019-03-27 13:50:21 INFO  ChannelManager:101 - added with Fujian-CFL-ID002 {"id":"ID002","name":"Peter","sex":"Male","age":19,"isFleeing":false,"desc":"Perter is a good boy"}
-2019-03-27 13:50:21 INFO  ChannelManager:101 - transaction returned with failure: Query for Fujian-CFL-ID002 is null 
-2019-03-27 13:50:21 INFO  ChannelManager:101 - transaction returned with failure: Error: query for Fujian-CFL-ID002 is null 
-2019-03-27 13:50:21 INFO  ChannelManager:101 - Deleted Fujian-CFL-ID002
-
+$ java -cp fugitivec-1.0-SNAPSHOT-jar-with-dependencies.jar com.vancir.integration.InvokeChaincode 
+2019-03-27 21:20:50 WARN  Config:127 - Failed to load any configuration from: config.properties. Using toolkit defaults
+2019-03-27 21:20:50 WARN  Config:78 - Failed to load any configuration from: config.properties. Using toolkit defaults
+2019-03-27 21:20:52 INFO  CAManager:91 - CA -http://localhost:7054 Enrolled User - admin
+2019-03-27 21:20:53 INFO  Channel:1147 - Channel Channel{id: 1, name: mychannel} eventThread started shutdown: false  thread: null 
+2019-03-27 21:20:53 INFO  ChannelManager:101 - added with ID002
+2019-03-27 21:20:53 INFO  InvokeChaincode:72 - Please input your command.
+add ID003 Sam Female 22 true Sam_is_not_good
+2019-03-27 21:21:16 INFO  InvokeChaincode:90 - Your opt is: add and your args is: [ID003, Sam, Female, 22, true, Sam_is_not_good]
+2019-03-27 21:21:16 INFO  ChannelManager:101 - added with ID003
+query ID002
+2019-03-27 21:21:25 INFO  InvokeChaincode:90 - Your opt is: query and your args is: [ID002]
+2019-03-27 21:21:25 INFO  ChannelManager:101 - Query Response: Name: Peter, Sex: Male, Age: 19, isFleeing: false, Description: Perter is a good boy
+update ID002 Alice_is_fugitive
+2019-03-27 21:21:33 INFO  InvokeChaincode:90 - Your opt is: update and your args is: [ID002, Alice_is_fugitive]
+2019-03-27 21:21:33 INFO  ChannelManager:101 - Key: ID002. Before updated, the message is Perter is a good boy After updated, the message now is Alice_is_fugitive.
+query ID002
+2019-03-27 21:21:40 INFO  InvokeChaincode:90 - Your opt is: query and your args is: [ID002]
+2019-03-27 21:21:40 INFO  ChannelManager:101 - Query Response: Name: Peter, Sex: Male, Age: 19, isFleeing: false, Description: Alice_is_fugitive
 ```
+
+如上所示, 在要求输入命令时:
+* 示例输入`add ID003 Sam Female 22 true Sam_is_not_good`添加了一名ID为`ID003`, 姓名为`Sam`, 性别为`Female`, 年龄为`22`, 是否在逃为`true`, 描述为`Sam_is_not_good`的逃犯信息. 
+* `query ID002`查询ID为`ID002`的逃犯信息, 答复为`Query Response: Name: Peter, Sex: Male, Age: 19, isFleeing: false, Description: Perter is a good boy`
+* `update ID002 Alice_is_fugitive`将ID为`ID002`的逃犯信息修改为`Alice_is_fugitive`
+* `query ID002` 验证刚才的修改是成功的. 
 
