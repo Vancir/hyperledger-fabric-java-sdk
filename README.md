@@ -201,3 +201,6 @@ query ID002
 * `update ID002 Alice_is_fugitive`将ID为`ID002`的逃犯信息修改为`Alice_is_fugitive`
 * `query ID002` 验证刚才的修改是成功的. 
 
+步骤成果展示如下所示: 
+
+![区块链网络使用步骤.jpg](docs/区块链网络使用步骤.jpg)
