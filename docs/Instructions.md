@@ -68,7 +68,7 @@ peer chaincode install -n mycc -v 1.0 -l java -p /opt/gopath/src/github.com/chai
 peer chaincode instantiate -o orderer.vancir.com:7050 --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/vancir.com/orderers/orderer.vancir.com/msp/tlscacerts/tlsca.vancir.com-cert.pem -C mychannel -n mycc -v 1.0 -c '{"Args":["init", "Alice", "Alice is fugitive", "Bob", "Bob is not fugitive"]}' -P "OR ('Org1MSP.member','Org2MSP.member')"
 # add, delete, query, update 
 peer chaincode invoke -n mycc -c '{"Args":["query", "ID002"]}' -C mychannel
-peer chaincode invoke -n mycc -c '{"Args":["add", "ID002", "Peter", "Male", "19", "false", "Perter is a good boy"]}' -C mychannel
+peer chaincode invoke -n mycc -c '{"Args":["add", "ID012", "Bob", "Male", "23", "false", "Bob is not a good guy"]}' -C mychannel
 
 add ID003 Sam Female 22 true Sam_is_not_good
 ```
