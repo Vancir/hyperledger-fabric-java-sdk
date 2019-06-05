@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<form action="{{ url_for('add_fugitive') }}" method=post class="form-horizontal" operation="">
+    <input type="text" class="form-control" value="" placeholder="请在此输入逃犯的ID" id="add-ID" name="add-ID" /> 
+    <input type="text" class="form-control" value="" placeholder="请在此输入逃犯的姓名" id="add-Name" name="add-Name" /> 
+    <input type="text" class="form-control" value="" placeholder="请在此输入逃犯的性别" id="add-Sex" name="add-Sex" /> 
+    <input type="text" class="form-control" value="" placeholder="请在此输入逃犯的年龄" id="add-Age" name="add-Age" /> 
+    <input type="text" class="form-control" value="" placeholder="请在此输入逃犯目前是否被捉拿" id="add-isFugitive" name="add-isFugitive" /> 
+    <input type="text" class="form-control" value="" placeholder="请在此输入逃犯的描述信息" id="add-Desc" name="add-Desc" /> 
+    <br>
+    <button type="submit" class="btn btn-primary btn-lg btn-block" href="#">提交</button>
+</form>
+
+{% for record in feedback %}
+    <tr>
+        <td>{{ record[0] }}</td>  
+    </tr>
+{% endfor %}
+
+{% endblock %}

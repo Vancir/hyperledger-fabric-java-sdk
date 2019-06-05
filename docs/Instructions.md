@@ -91,3 +91,5 @@ wget --post-data "{\"id\":\"user555\",\"type\":\"client\",\"affiliation\":\"org1
 # register a user to org1
 fabric-ca-client register -d --id.name user001 --id.affiliation org1
 ```
+
+/home/vancir/Documents/code/blockchain-explorer/app/persistence/fabric/postgreSQL/db/createdb.sh

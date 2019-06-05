@@ -13,6 +13,7 @@ import com.vancir.user.AppUser;
 import com.vancir.utilities.Config;
 import com.vancir.utilities.Util;
 
+import org.apache.commons.math3.stat.interval.AgrestiCoullInterval;
 import org.apache.log4j.Logger;
 import org.hyperledger.fabric.sdk.ChaincodeID;
 import org.hyperledger.fabric.sdk.Channel;
@@ -29,6 +30,10 @@ public class InvokeChaincode {
 
     public static void main(String[] args) {
         try {
+            for (int i=0; i<args.length; i++) {
+                System.out.println(args[i]);
+            }
+
             AppUser org1Admin = Util.getOrgUser(Config.ADMIN, Config.ORG1_MSP);
             CAManager caManager = new CAManager(Config.CA_ORG1_URL, null);
             caManager.setAdminUser(org1Admin);
@@ -66,30 +71,79 @@ public class InvokeChaincode {
             // String[] testInitArgs = { "ID001", "Alice", "Female", "20", "true", "Alice is not fugitive" };
             // channelManager.invokeChaincode(Config.CHAINCODE_NAME, "init", testInitArgs);
             
-            String[] testAddArgs = { "ID002", "Peter", "Male", "19", "false", "Perter is a good boy" };
-            channelManager.invokeChaincode(Config.CHAINCODE_NAME, "add", testAddArgs);
+            // String[] testAddArgs = { "ID002", "Peter", "Male", "19", "false", "Perter is a good boy" };
+            // channelManager.invokeChaincode(Config.CHAINCODE_NAME, "add", testAddArgs);
             
-            logger.info("Please input your command.");
+            // logger.info("Please input your command.");
             // add ID003 Sam Female 22 true Sam_is_not_good
             // delete ID003
             // query ID002
             // update ID002 Alice_is_fugitive
-            Scanner sc = new Scanner(System.in);
-            while(sc.hasNextLine()) {
-                String inputLine = sc.nextLine();
-                // logger.info(inputLine);
+            String opt = args[0];
+            switch (opt) {
+                case "add":
+                    if (args.length != 7) {
+                        System.out.println("Wrong number of arguments");
+                        break;
+                    }
+                    String[] addArgs = new String[6];
+                    for (int i=1; i<args.length; i++) {
+                        addArgs[i-1] = args[i];
+                    }
+                    channelManager.invokeChaincode(Config.CHAINCODE_NAME, opt, addArgs);
+                    break;
+                case "query":
+                    if (args.length != 2) {
+                        System.out.println("Wrong number of arguments");
+                        break;
+                    }
+                    String[] queryArgs = new String[1];
+                    queryArgs[0] = args[1];
 
-                String[] inputArray = inputLine.split(" ");
-                String opt = inputArray[0];
-                String[] inputArgs = new String[inputArray.length-1];
-                for (int i=1; i<inputArray.length; i++) {
-                    inputArgs[i-1] = inputArray[i];
-                }
-
-
-                logger.info("Your opt is: " + opt + " and your args is: " + Arrays.toString(inputArgs));
-                channelManager.invokeChaincode(Config.CHAINCODE_NAME, inputArray[0], inputArgs);
+                    channelManager.invokeChaincode(Config.CHAINCODE_NAME, opt, queryArgs);
+                    break;
+                case "delete":
+                    if (args.length != 2) {
+                        System.out.println("Wrong number of arguments");
+                        break;
+                    }
+                    String[] deleteArgs = new String[1];
+                    deleteArgs[0] = args[1];
+                    
+                    channelManager.invokeChaincode(Config.CHAINCODE_NAME, opt, deleteArgs);
+                    break;
+                case "update":
+                    if (args.length != 3) {
+                        System.out.println("Wrong number of arguments");
+                        break;
+                    }
+                    String[] updateArgs = new String[2];
+                    for (int i=1; i<args.length; i++) {
+                        updateArgs[i-1] = args[i];
+                    }
+                    channelManager.invokeChaincode(Config.CHAINCODE_NAME, opt, updateArgs);
+                    break;
+                default:
+                    System.out.println("Your command is wrong.");
             }
+
+
+            // Scanner sc = new Scanner(System.in);
+            // while(sc.hasNextLine()) {
+            //     String inputLine = sc.nextLine();
+            //     // logger.info(inputLine);
+
+            //     String[] inputArray = inputLine.split(" ");
+            //     String opt = inputArray[0];
+            //     String[] inputArgs = new String[inputArray.length-1];
+            //     for (int i=1; i<inputArray.length; i++) {
+            //         inputArgs[i-1] = inputArray[i];
+            //     }
+
+
+            //     logger.info("Your opt is: " + opt + " and your args is: " + Arrays.toString(inputArgs));
+            //     channelManager.invokeChaincode(Config.CHAINCODE_NAME, inputArray[0], inputArgs);
+            // }
 
         } catch (Exception e) {
             e.printStackTrace();

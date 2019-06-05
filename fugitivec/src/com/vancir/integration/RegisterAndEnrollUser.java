@@ -26,7 +26,7 @@ public class RegisterAndEnrollUser {
             AppUser org1User = Util.getOrgAdmin(userName, Config.ORG1_MSP, PROJ_ROOT + Config.ORG1_ADMIN_PK, PROJ_ROOT + Config.ORG1_ADMIN_CERT);
             String org1UserSecret = caManager.registerAndEnrollUser(org1User);
             
-            logger.info("Org1 User already regsiter and enrolled. Name: " + userName + " Password: " + org1UserSecret);
+            System.out.println("Org1 User already regsiter and enrolled. Name: " + userName + " Password: " + org1UserSecret);
         } catch (Exception e) {
             e.printStackTrace();
         }

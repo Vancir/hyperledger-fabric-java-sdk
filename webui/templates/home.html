@@ -1,0 +1,18 @@
+{% extends "layout.html" %} 
+{% block body %}
+
+{% for message in get_flashed_messages() %}
+<div class="alert alert-info">
+  <a href="/" class="close" data-dismiss="alert">&times;</a>
+  <strong>注意: </strong>{{message}}
+</div>
+{% endfor %} 
+
+
+
+<div class="hero-unit">
+  <h2>Fugitivec</h2>
+  <p>这是一个基于区块链的追逃信息记录系统</p>
+
+</div>
+{% endblock %}

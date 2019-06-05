@@ -73,7 +73,7 @@ public class CAManager {
         RegistrationRequest rr = new RegistrationRequest(registrar.getName(), registrar.getAffiliation());
         String enrollmentSecret = caClient.register(rr, adminUser);
 
-        logger.info("CA -" + caUrl + " Registered User - " + registrar.getName());
+        // logger.info("CA -" + caUrl + " Registered User - " + registrar.getName());
         return enrollmentSecret;
     }  
     /**
@@ -88,7 +88,7 @@ public class CAManager {
         Enrollment enrollment = caClient.enroll(user.getName(), secret);
         user.setEnrollment(enrollment);
 
-        logger.info("CA -" + caUrl + " Enrolled User - " + user.getName());
+        // logger.info("CA -" + caUrl + " Enrolled User - " + user.getName());
         return user;
     }
 
@@ -96,7 +96,7 @@ public class CAManager {
         Enrollment adminEnrollment = caClient.enroll(username, password);
         adminUser.setEnrollment(adminEnrollment);
 
-        logger.info("CA -" + caUrl + " Enrolled Admin - " + adminUser.getName());
+        // logger.info("CA -" + caUrl + " Enrolled Admin - " + adminUser.getName());
         return adminUser;
     }
 

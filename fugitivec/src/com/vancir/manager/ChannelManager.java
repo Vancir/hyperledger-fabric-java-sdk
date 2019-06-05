@@ -79,7 +79,7 @@ public class ChannelManager {
         Collection<ProposalResponse> responses = channel.sendInstantiationProposal(request);
 		CompletableFuture<TransactionEvent> cf = channel.sendTransaction(responses);
         
-        logger.info(cf.toString());
+        // logger.info(cf.toString());
         return responses;
     }
 
@@ -98,7 +98,7 @@ public class ChannelManager {
             channel.sendTransaction(responses);
             for (ProposalResponse res : responses) {
                 // String stringResponse = new String(res.getChaincodeActionResponsePayload());
-                logger.info(res.getMessage());
+                System.out.println("Invoke Response: " + res.getMessage());
             }
         }
 
